@@ -1,0 +1,61 @@
+<div class="container">
+    <h3 class="text-center full-width margin_top_20">Register</h3>
+  <mat-card>
+    <mat-card-content>
+  <form name="registerForm" novalidate [formGroup]="registerForm">
+    <div class="col-md-6 col-sm-12  col-xs-12 col-12" ngClass.lg="offset-3" ngClass.md="offset-5" ngClass.md="offset-3">
+      <div class="row">
+        
+        <div class="col-md-12">
+          <mat-form-field class="full-width margin_top_20 margin_bottom_20">
+            <input matInput placeholder="First name" name="firstname" formControlName="firstname">
+            <mat-error *ngIf="firstname.invalid">
+                <div *ngIf="firstname.errors.required">Firstname is required</div>
+                <div *ngIf="firstname.errors.pattern">Firstname is invalid</div>
+              </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field class="full-width margin_top_20 margin_bottom_20" >
+            <input matInput placeholder="Last name" formControlName="lastname">
+            <mat-error *ngIf="lastname.invalid">
+                <div *ngIf="lastname.errors.required">Lastname is required</div>
+                <div *ngIf="lastname.errors.pattern">Lastname is invalid</div>
+              </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field class="full-width margin_top_20 margin_bottom_20">
+            <input matInput placeholder="Email"  formControlName="email">
+            <mat-error *ngIf="email.invalid">
+                <div *ngIf="email.errors.required">Email is required</div>
+                <div *ngIf="email.errors.pattern">Email is invalid</div>
+              </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-12">
+          <mat-form-field class="full-width margin_top_20 margin_bottom_20">
+            <input matInput type="password" #password placeholder="Password" formControlName="password">
+            <mat-error *ngIf="password.invalid">
+                <div *ngIf="password.errors.required">Password is required</div>
+            </mat-error>
+          </mat-form-field>
+          <mat-password-strength password="{{password.value}}" #passwordComponent></mat-password-strength>
+          <mat-password-strength-info [passwordComponent]="passwordComponent"></mat-password-strength-info>
+        </div>
+        <div class="col-md-12 margin_top_20">
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <button mat-raised-button color="primary" class="full-width"  (click)="register()">Register</button>
+            </div>
+            <div class="col-md-6 col-sm-12 text-center">
+                <a [routerLink]="['/login']">Go to Login</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+  </mat-card-content>
+  </mat-card>
+  </div>

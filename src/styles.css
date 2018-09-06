@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css';
+
+
+*{box-sizing:border-box;}
+.full-width{
+    width:100%;
+}
+.margin_top_20{
+    margin-top:20px;
+}
+.margin_bottom_20{
+    margin-bottom:20px;
+}
+.nav-link{
+    cursor: pointer;
+}
+.contact-group-btn .cancel_btn{
+    margin-left:20px;
+}
+.data_tables{
+    width:100%;
+}
+.group_add{
+    margin-right:20px;
+}
+.dashboard_container .add_btn{
+    margin-top:10px;
+}
+.empty_container{
+    padding:30px;
+    background:#f7f7f7;
+    text-align:center;   
+    margin-top:50px;
+}
+.icons_info{
+    padding:5px;
+    margin:5px;
+}
