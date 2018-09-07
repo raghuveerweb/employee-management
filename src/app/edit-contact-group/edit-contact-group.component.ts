@@ -13,12 +13,13 @@ export class EditContactGroupComponent implements OnInit {
   userContacts : any = [];
   userId : any;
   contactGroups : any = [];
+  canAddContacts : boolean = false;
   groupNameIndex : any;
-  displayedColumns: string[] = ['name', 'phone', 'actions'];
+  displayedColumns: string[] = ['name', 'phone','status', 'actions'];
 
   dataSource = new MatTableDataSource<contactsInformation>(this.userContacts);
 
-  @ViewChild(MatPaginator,) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -36,6 +37,8 @@ export class EditContactGroupComponent implements OnInit {
   ngOnInit() {
     this.userId = localStorage.getItem("userId");
     this.fetchContactGroups();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   addGroupContact(){
@@ -70,18 +73,28 @@ export class EditContactGroupComponent implements OnInit {
     }
   }
 
+  setDataSources(){
+    this.dataSource = new MatTableDataSource<contactsInformation>(this.userContacts);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
   fetchContactGroups(){
     this.db.list("/contactInformation/"+this.userId).valueChanges().subscribe(data=>{
       console.log("DATA at value change::::",data[0]);
-      this.dataSource = new MatTableDataSource<contactsInformation>(this.userContacts);
+      
+        this.setDataSources();
         this.groupNameIndex = this.getIndexOfelement(data[0],'groupName',this.activatedRoute.snapshot.params["id"]);
         //alert(groupNameIndex);
         this.contactGroups = data[0];
+        
         if(this.groupNameIndex != -1){
+          if(this.contactGroups[this.groupNameIndex].status == "Active"){
+            this.canAddContacts = true;
+          }
           if(this.contactGroups[this.groupNameIndex].contacts){
-            //alert('s');
             this.userContacts = this.contactGroups[this.groupNameIndex].contacts;
-            this.dataSource = new MatTableDataSource<contactsInformation>(this.userContacts);
+            this.setDataSources();
           }
         }
     });
@@ -90,5 +103,6 @@ export class EditContactGroupComponent implements OnInit {
 }
 export interface contactsInformation {
   name: string;
-  phone: number
+  phone: number;
+  status : string;
 }

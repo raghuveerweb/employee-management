@@ -18,6 +18,7 @@ export class CreateGroupContactComponent implements OnInit {
   contactForm : FormGroup;
   phone: FormControl;
   name : FormControl;
+  status : FormControl;
 
   constructor(public db: AngularFireDatabase,private fb: FormBuilder, private activatedRoute : ActivatedRoute, private router : Router, private snackBar : MatSnackBar) { }
 
@@ -26,6 +27,7 @@ export class CreateGroupContactComponent implements OnInit {
     this.createControls();
     this.createForm();
     this.fetchContacts();
+    this.status.setValue('Active');
   }
   
   fetchContacts(){
@@ -57,7 +59,7 @@ export class CreateGroupContactComponent implements OnInit {
         }
         
         let updateInfo = this.db.object('/contactInformation/'+this.userId+'/ContactGroups').set(this.contactGroupArray);
-        this.snackBar.open("Conacted Added to Group",'Close');
+        this.snackBar.open("Contact Added to Group",'Close');
         this.router.navigateByUrl("/app/editContactGroup/"+this.activatedRoute.snapshot.params["groupName"]);
       }else{
         this.snackBar.open("Could not find any group to add contact","Close");
@@ -74,12 +76,16 @@ export class CreateGroupContactComponent implements OnInit {
       Validators.required,
       Validators.pattern('^[0-9]+$')
     ])
+    this.status = new FormControl('', [
+      Validators.required
+    ])
   }
 
   createForm() {
     this.contactForm = new FormGroup({
       name: this.name,
-      phone: this.phone
+      phone: this.phone,
+      status : this.status
     });
   }
 

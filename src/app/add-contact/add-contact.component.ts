@@ -17,6 +17,7 @@ export class AddContactComponent implements OnInit {
   contactForm : FormGroup;
   phone: FormControl;
   name : FormControl;
+  status : FormControl;
 
   constructor(public db: AngularFireDatabase,private fb: FormBuilder, private router : Router, private snackBar : MatSnackBar) { }
 
@@ -25,6 +26,7 @@ export class AddContactComponent implements OnInit {
     this.createControls();
     this.createForm();
     this.fetchContacts();
+    this.status.setValue("Active");
   }
   
   fetchContacts(){
@@ -56,12 +58,16 @@ export class AddContactComponent implements OnInit {
       Validators.required,
       Validators.pattern('^[0-9]+$')
     ])
+    this.status = new FormControl('', [
+      Validators.required
+    ])
   }
 
   createForm() {
     this.contactForm = new FormGroup({
       name: this.name,
-      phone: this.phone
+      phone: this.phone,
+      status: this.status
     });
   }
 

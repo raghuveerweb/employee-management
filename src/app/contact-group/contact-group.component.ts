@@ -20,6 +20,7 @@ export class ContactGroupComponent implements OnInit {
   contactGroupForm : FormGroup;
   groupName: FormControl;
   groupDescription: FormControl;
+  status : FormControl;
 
   constructor(public db: AngularFireDatabase,private fb: FormBuilder, private router: Router, private snackBar : MatSnackBar) { }
 
@@ -27,6 +28,7 @@ export class ContactGroupComponent implements OnInit {
     this.userId = localStorage.getItem("userId");
     this.createControls();
     this.createForm();
+    this.status.setValue("Active");
     this.db.list("/contactInformation/"+this.userId).valueChanges().subscribe(data=>{
       console.log("DATA::::",data);
       if(data.length != 0){
@@ -68,12 +70,16 @@ export class ContactGroupComponent implements OnInit {
     this.groupDescription = new FormControl('', [
       Validators.required
     ])
+    this.status = new FormControl('', [
+      Validators.required
+    ])
   }
 
   createForm() {
     this.contactGroupForm = new FormGroup({
       groupName: this.groupName,
-      groupDescription: this.groupDescription
+      groupDescription: this.groupDescription,
+      status : this.status
     });
   }
 }

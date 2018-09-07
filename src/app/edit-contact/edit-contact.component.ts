@@ -21,6 +21,7 @@ export class EditContactComponent implements OnInit {
   Formname:any;
   FormPhone : any;
   name : FormControl;
+  status : FormControl;
  
   constructor(public db: AngularFireDatabase,private fb: FormBuilder, private activatedRoute : ActivatedRoute, private router : Router, private snackBar : MatSnackBar) { }
 
@@ -32,7 +33,8 @@ export class EditContactComponent implements OnInit {
     this.fetchContacts();
     this.Formname = this.activatedRoute.snapshot.params["name"];
     this.FormPhone = this.activatedRoute.snapshot.params["phone"];
-    this.setValues();
+    
+    this.status.setValue("Active");
   }
   
   fetchContacts(){
@@ -51,6 +53,7 @@ export class EditContactComponent implements OnInit {
       console.log(data)  
       this.contactArray = data;  
       console.log(this.contactArray);
+      this.setValues();
     });
   }
 
@@ -58,6 +61,22 @@ export class EditContactComponent implements OnInit {
     //alert(this.activatedRoute.snapshot.params["name"]);
     this.name.setValue(this.Formname);
     this.phone.setValue(this.FormPhone);
+    let type = this.activatedRoute.snapshot.params["type"];
+    if(type == "contact"){
+      let contactIndex = this.getIndexOfelementByMultipleAttrs(this.contactArray,'name',this.Formname,'phone', this.FormPhone);
+      if(contactIndex !=  -1){
+        this.status.setValue(this.contactArray[contactIndex].status);
+      }      
+    }else{
+      let groupIndex = this.getIndexOfelement(this.contactArray,'groupName',this.typeSplit[1]);
+      if(groupIndex != -1){
+        let contactIndex = this.getIndexOfelementByMultipleAttrs(this.contactArray[groupIndex].contacts,'name',this.Formname,'phone', this.FormPhone);
+        if(contactIndex != -1){
+          this.status.setValue(this.contactArray[groupIndex].contacts[contactIndex].status);
+        }
+      }
+    }
+    
   }
 
   getIndexOfelementByMultipleAttrs(arrayTocheck, attr1, value1, attr2, value2) {
@@ -89,6 +108,7 @@ export class EditContactComponent implements OnInit {
           if(contactIndex != -1){
             this.contactArray[groupIndex].contacts[contactIndex].name = this.name.value;
             this.contactArray[groupIndex].contacts[contactIndex].phone = this.phone.value;
+            this.contactArray[groupIndex].contacts[contactIndex].status = this.status.value;
             url = '/contactInformation/'+this.userId+'/ContactGroups'; 
             let updateInfo = this.db.object(url).set(this.contactArray); 
             this.snackBar.open("Contact updated successfully","Close");
@@ -104,6 +124,7 @@ export class EditContactComponent implements OnInit {
         if(contactIndex !=  -1){
           this.contactArray[contactIndex].name = this.name.value;
           this.contactArray[contactIndex].phone = this.phone.value;
+          this.contactArray[contactIndex].status = this.status.value;
           url = '/contactInformation/'+this.userId+'/contacts';
           let updateInfo = this.db.object(url).set(this.contactArray);
           this.snackBar.open("Contact updated successfully","Close");
@@ -124,12 +145,16 @@ export class EditContactComponent implements OnInit {
       Validators.required,
       Validators.pattern('^[0-9]+$')
     ])
+    this.status = new FormControl('', [
+      Validators.required
+    ])
   }
 
   createForm() {
     this.contactForm = new FormGroup({
       name: this.name,
-      phone: this.phone
+      phone: this.phone,
+      status : this.status
     });
   }
 }

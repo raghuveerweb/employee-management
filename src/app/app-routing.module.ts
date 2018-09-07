@@ -10,6 +10,7 @@ import { EditContactGroupComponent } from './edit-contact-group/edit-contact-gro
 import { AddContactComponent } from './add-contact/add-contact.component';
 import { EditContactComponent } from './edit-contact/edit-contact.component';
 import { CreateGroupContactComponent } from './create-group-contact/create-group-contact.component';
+import { EditGroupInformationComponent } from './edit-group-information/edit-group-information.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -22,6 +23,7 @@ const routes: Routes = [
       {path:'dashboard',component: DashboardComponent},
       {path:'contactGroup',component: ContactGroupComponent},
       {path:'editContactGroup/:id',component: EditContactGroupComponent},
+      {path:'editGroupInformation/:id',component: EditGroupInformationComponent},
       {path:'contact',component: AddContactComponent},
       {path:'editContact/:type/:name/:phone',component: EditContactComponent},
       {path:'createGroupContact/:groupName', component: CreateGroupContactComponent}

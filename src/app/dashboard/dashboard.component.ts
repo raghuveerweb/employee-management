@@ -16,17 +16,25 @@ export class DashboardComponent implements OnInit {
   contactsExist : boolean = false;
   userContacts : any = [];
 
-  displayedColumns: string[] = ['groupName', 'groupDescription', 'actions'];
+  displayedColumns: string[] = ['groupName', 'groupDescription','status', 'actions'];
 
   dataSource = new MatTableDataSource<contactGroupInterface>(this.userContactGroups);
 
-  contactDisplayedColumns: string[] = ['name', 'phone', 'actions'];
+  
+
+  contactDisplayedColumns: string[] = ['name', 'phone','status', 'actions'];
+
+  @ViewChild('contactGroups') paginator: MatPaginator;
+
+  @ViewChild('sort1') sort: MatSort;
 
   contactDataSource = new MatTableDataSource<contactInterface>(this.userContacts);
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('contacts') contactPaginator : MatPaginator;
+
+  @ViewChild('sort2') contactSort: MatSort;
 
 
   constructor(public db: AngularFireDatabase, private router : Router) { }
@@ -40,6 +48,11 @@ export class DashboardComponent implements OnInit {
     return -1;
   }
 
+  addGroupContact(row, event){
+    event.preventDefault();
+    this.router.navigateByUrl("/app/createGroupContact/"+row.groupName);
+  }
+
   getIndexOfelementByMultipleAttrs(arrayTocheck, attr1, value1, attr2, value2) {
     for (var i = 0; i < arrayTocheck.length; i += 1) {
       if (arrayTocheck[i][attr1] === value1 && arrayTocheck[i][attr2] === value2) {
@@ -51,6 +64,11 @@ export class DashboardComponent implements OnInit {
 
 
   editGroup(row,event){
+    event.preventDefault();
+    this.router.navigateByUrl("/app/editGroupInformation/"+row.groupName);
+  }
+
+  groupInfoAdd(row,event){
     event.preventDefault();
     this.router.navigateByUrl("/app/editContactGroup/"+row.groupName);
   }
@@ -71,7 +89,7 @@ export class DashboardComponent implements OnInit {
   deleteContact(row,event){
     event.preventDefault();
     let indexOfElement = this.getIndexOfelementByMultipleAttrs(this.userContacts, 'name' ,row.name , 'phone', row.phone);
-    alert(indexOfElement);
+    //alert(indexOfElement);
     if(indexOfElement != -1){
       this.userContacts.splice(indexOfElement,1);
       this.db.object('/contactInformation/'+this.userId+'/contacts').set(this.userContacts);
@@ -83,28 +101,36 @@ export class DashboardComponent implements OnInit {
   }
 
   applyFilterOnContacts(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.contactDataSource.filter = filterValue.trim().toLowerCase();
   }
 
   setDataSources(){
     this.dataSource = new MatTableDataSource<contactGroupInterface>(this.userContactGroups);
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.contactDataSource = new MatTableDataSource<contactInterface>(this.userContacts);
+    this.contactDataSource.paginator = this.contactPaginator;
+    this.contactDataSource.sort = this.contactSort;
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   ngOnInit() {
     this.userId = localStorage.getItem("userId");
     this.db.list("/contactInformation/"+this.userId).valueChanges().subscribe(data=>{
       this.setDataSources();
+
       if(data.length != 0){
-        console.log(data);
         this.contactGroupExist = this.contactsExist = true;
         this.userContactGroups = data[0];
-        console.log(data[1]);
         this.userContacts = data[1];
         this.setDataSources();
+
       }
     });
-    
   }
 }
 
@@ -112,11 +138,13 @@ export class DashboardComponent implements OnInit {
 
 export interface contactGroupInterface {
   groupName: string;
-  groupDescription: string
+  groupDescription: string,
+  status : string
 }
 
 export interface contactInterface {
   name: string;
-  phone: number
+  phone: number,
+  status: string
 }
 

@@ -23,6 +23,17 @@
           </mat-form-field>
         </div>
         <div class="col-md-12">
+            
+            <mat-radio-group formControlName="status">
+              <mat-radio-button value="Active">Active</mat-radio-button>
+              <mat-radio-button value="Inactive">Inactive</mat-radio-button>
+            </mat-radio-group>
+            <mat-error *ngIf="status.invalid">
+                <div *ngIf="status.errors.required">Status is required</div>
+              </mat-error>
+          
+        </div>
+        <div class="col-md-12">
           <div class="row">
             <div class="col-md-12 contact-group-btn text-center">
                 <button mat-raised-button color="primary" (click)="updateContact()">Update</button>

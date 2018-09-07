@@ -19,7 +19,7 @@ export class EmployeeRegisterComponent implements OnInit {
   lastname: FormControl;
   email:FormControl;
   password:FormControl;
-
+  employeesData : any = [];
   userId : any;
 
   constructor(public snackBar: MatSnackBar,public db: AngularFireDatabase,private fb: FormBuilder, private auth : AuthService, private router : Router) { }
@@ -29,21 +29,38 @@ export class EmployeeRegisterComponent implements OnInit {
   ngOnInit() {
     this.createControls();
     this.createForm();
+    this.db.list('/employees').valueChanges().subscribe(data=>{
+      console.log(data);
+      this.employeesData = data;
+    });
+  }
+
+
+  getIndexOfelement(arrayTocheck, attr, value) {
+    for (var i = 0; i < arrayTocheck.length; i += 1) {
+      if (arrayTocheck[i][attr] === value) {
+        return i;
+      }
+    }
+    return -1;
   }
 
 
   register(){
-    
     if(this.registerForm.valid){
-      this.auth.emailSignUp(this.email.value,this.password.value).then(
-        (data: any) => {
-          console.log(data);
-          this.userId = data.uid;
-          this.db.object('/employees/'+this.userId).set(this.registerForm.value);
-          this.snackBar.open("Registration successful","Close");
-          this.router.navigateByUrl("/login");
-        }
-      );
+      if(this.getIndexOfelement(this.employeesData,'email',this.email.value) == -1){
+        this.auth.emailSignUp(this.email.value,this.password.value).then(
+          (data: any) => {
+            console.log(data);
+            this.userId = data.uid;
+            this.db.object('/employees/'+this.userId).set(this.registerForm.value);
+            this.snackBar.open("Registration successful","Close");
+            this.router.navigateByUrl("/login");
+          }
+        );
+      }else{
+        this.snackBar.open('Email is already token',"Close");
+      }
     }
   }
 

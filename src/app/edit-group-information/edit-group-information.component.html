@@ -1,25 +1,24 @@
 <div class="container">
-    <h3 class="text-center full-width">Create Group Contact</h3>
-    <mat-card><mat-card-content>
-    <form name="registerForm" novalidate [formGroup]="contactForm">
-      <div class="col-md-6 col-sm-12  col-xs-12 col-12" ngClass.lg="offset-3" ngClass.md="offset-5" ngClass.md="offset-3">
+    <h3 class="text-center full-width margin_top_20">Edit Contact Group</h3>
+  <mat-card><mat-card-content>
+    <form name="registerForm" novalidate [formGroup]="contactGroupForm">
+      <div class="col-md-6 col-sm-12  col-xs-12 col-12 margin_top_20" ngClass.lg="offset-3" ngClass.md="offset-5" ngClass.md="offset-3">
         <div class="row">
-          
+       
           <div class="col-md-12">
-            <mat-form-field class="full-width margin_top_20 margin_bottom_20">
-              <input matInput placeholder="Name" name="name" formControlName="name">
-              <mat-error *ngIf="name.invalid">
-                  <div *ngIf="name.errors.required">Name is required</div>
-                  <div *ngIf="name.errors.pattern">Name is invalid</div>
+            <mat-form-field class="full-width  margin_top_20">
+              <input matInput placeholder="Name" name="groupName" formControlName="groupName">
+              <mat-error *ngIf="groupName.invalid">
+                  <div *ngIf="groupName.errors.required">Group name is required</div>
+                  <div *ngIf="groupName.errors.pattern">Group name is invalid</div>
                 </mat-error>
             </mat-form-field>
           </div>
           <div class="col-md-12">
             <mat-form-field class="full-width margin_top_20 margin_bottom_20" >
-              <input matInput placeholder="phone" formControlName="phone">
-              <mat-error *ngIf="phone.invalid">
-                  <div *ngIf="phone.errors.required">Phone is required</div>
-                  <div *ngIf="phone.errors.pattern">Phone is invalid</div>
+              <input matInput placeholder="Description" formControlName="groupDescription">
+              <mat-error *ngIf="groupDescription.invalid">
+                  <div *ngIf="groupDescription.errors.required">Group Description is required</div>
                 </mat-error>
             </mat-form-field>
           </div>
@@ -37,8 +36,7 @@
           <div class="col-md-12">
             <div class="row">
               <div class="col-md-12 contact-group-btn text-center">
-                  <button mat-raised-button color="primary" (click)="addContact()">Create</button>
-                  
+                  <button mat-raised-button color="primary" (click)="updateGroup()">Update</button>
               </div>
             </div>
           </div>
